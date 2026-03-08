@@ -1,0 +1,20 @@
+{
+  "name": "powerjob-docs",
+  "version": "1.0.0",
+  "description": "PowerJob Official Documentation",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PowerJob/PowerJob-Docs"
+  },
+  "author": "PowerJob Team",
+  "license": "Apache-2.0"
+}
