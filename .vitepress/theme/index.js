@@ -1,9 +1,10 @@
 import DefaultTheme from 'vitepress/theme'
-import ParticleBackground from './components/ParticleBackground.vue'
+import HomePage from './components/HomePage.vue'
+import './styles/custom.css'
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
-    app.component('ParticleBackground', ParticleBackground)
+    app.component('HomePage', HomePage)
   }
 }
