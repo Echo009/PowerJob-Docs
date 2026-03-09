@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitepress'
+import { withMermaid } from "vitepress-plugin-mermaid"
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   title: "PowerJob",
   description: "Distributed Scheduling and Computing Framework",
 
@@ -204,5 +204,8 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#6366f1' }],
     ['meta', { name: 'og:type', content: 'website' }],
     ['meta', { name: 'og:title', content: 'PowerJob' }]
-  ]
+  ],
+
+  // Mermaid 图表渲染配置
+  mermaid: {},
 })

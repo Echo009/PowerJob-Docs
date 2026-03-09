@@ -16,5 +16,9 @@
     "url": "https://github.com/PowerJob/PowerJob-Docs"
   },
   "author": "PowerJob Team",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "mermaid": "^11.12.3",
+    "vitepress-plugin-mermaid": "^2.0.17"
+  }
 }

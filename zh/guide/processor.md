@@ -87,14 +87,16 @@ sequenceDiagram
     participant S as Server
     participant W as Worker 集群
 
-    Note over W as 所有节点并行执行 process()
+    Note over W: 所有节点并行执行 process()
 
     S->>W: preProcess (单节点)
     W-->>S: 前置完成
 
     par 并行执行
         S->>W1: process
+    and
         S->>W2: process
+    and
         S->>W3: process
     end
 
@@ -194,22 +196,27 @@ public class StatisticsProcessor implements MapReduceProcessor {
 ```mermaid
 sequenceDiagram
     participant S as Server
-    participant W as Worker
+    participant W1 as Worker 1
+    participant W2 as Worker 2
+    participant W3 as Worker 3
 
-    S->>W: 根任务 (Map)
-    W-->>S: 子任务列表
+    S->>W1: 根任务 (Map)
+    W1-->>S: 子任务列表
 
     par 并行执行子任务
         S->>W1: 子任务1
+    and
         S->>W2: 子任务2
+    and
         S->>W3: 子任务3
     end
+
     W1-->>S: 结果1
     W2-->>S: 结果2
     W3-->>S: 结果3
 
-    S->>W: Reduce (汇总)
-    W-->>S: 最终结果
+    S->>W1: Reduce (汇总)
+    W1-->>S: 最终结果
 ```
 ## TaskContext 详解
 ### 核心属性

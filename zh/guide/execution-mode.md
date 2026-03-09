@@ -114,7 +114,9 @@ sequenceDiagram
 
     par 并行执行
         S->>W1: process
+    and
         S->>W2: process
+    and
         S->>W3: process
     end
 
@@ -259,7 +261,9 @@ sequenceDiagram
 
     par 并行执行子任务
         S->>W: 子任务 1
+    and
         S->>W: 子任务 2
+    and
         S->>W: 子任务 3
     end
 
