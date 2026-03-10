@@ -330,5 +330,5 @@ public class MyService {
 myService#greetingHandler
 ```
 ## 下一步
-- [执行模式](/zh/guide/execution-mode) - 了解不同执行模式
-- [Spring Boot 集成](/zh/guide/spring-boot) - Spring Boot 集成配置
+- [执行模式](/zh/core/execution-mode) - 了解不同执行模式
+- [Spring Boot 集成](/zh/integration/spring-boot) - Spring Boot 集成配置

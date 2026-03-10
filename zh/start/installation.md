@@ -706,8 +706,8 @@ echo "所有检查通过！"
 
 恭喜！PowerJob Server 已经成功部署。
 
-- 📚 [快速上手](/guide/quick-start) - 了解如何创建第一个任务
-- 🏗️ [Worker 接入](/guide/worker) - 让应用接入 PowerJob
+- 📚 [快速上手](/start/quick-start) - 了解如何创建第一个任务
+- 🏗️ [Worker 接入](/advanced/worker) - 让应用接入 PowerJob
 - 📖 [用户指南](/guide/) - 查看完整功能文档
 
 如遇问题，请访问：

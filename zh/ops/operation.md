@@ -284,5 +284,5 @@ try {
 
 ## 下一步
 
-- [报警通知](/zh/guide/alert) - 配置任务告警
-- [OpenAPI 使用](/zh/guide/openapi) - 通过 API 进行运维操作
+- [报警通知](/zh/ops/alert) - 配置任务告警
+- [OpenAPI 使用](/zh/api/openapi) - 通过 API 进行运维操作

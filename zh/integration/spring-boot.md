@@ -255,5 +255,5 @@ public ProcessResult process(TaskContext context) throws Exception {
 }
 ```
 ## 下一步
-- [处理器开发](/zh/guide/processor) - 学习各种处理器接口
-- [执行模式](/zh/guide/execution-mode) - 了解不同的执行模式
+- [处理器开发](/zh/core/processor) - 学习各种处理器接口
+- [执行模式](/zh/core/execution-mode) - 了解不同的执行模式

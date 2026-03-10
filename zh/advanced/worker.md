@@ -525,6 +525,6 @@ powerjob:
 
 ## 下一步
 
-- [处理器开发](/zh/guide/processor) - 学习如何开发处理器
-- [任务高级配置](/zh/guide/advanced-task) - 了解任务的高级特性
-- [工作流](/zh/guide/workflow) - 使用工作流编排复杂任务
+- [处理器开发](/zh/core/processor) - 学习如何开发处理器
+- [任务高级配置](/zh/advanced/advanced-task) - 了解任务的高级特性
+- [工作流](/zh/advanced/workflow) - 使用工作流编排复杂任务

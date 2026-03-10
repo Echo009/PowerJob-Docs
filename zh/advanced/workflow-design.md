@@ -993,6 +993,6 @@ wfContext.appendData2WfContext("correctKey", value);
 
 ## 下一步
 
-- [工作流](/zh/guide/workflow) - 了解工作流的核心概念
-- [任务](/zh/guide/task) - 学习任务的详细配置
-- [OpenAPI](/zh/guide/openapi) - 通过 API 管理工作流
+- [工作流](/zh/advanced/workflow) - 了解工作流的核心概念
+- [任务](/zh/core/task) - 学习任务的详细配置
+- [OpenAPI](/zh/api/openapi) - 通过 API 管理工作流

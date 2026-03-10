@@ -168,5 +168,5 @@ client.retryWorkflowInstance(wfInstanceId);
 
 ## 下一步
 
-- [工作流编排](/zh/guide/workflow-design) - 学习如何在控制台编排工作流
-- [OpenAPI 使用](/zh/guide/openapi) - 通过 API 管理工作流
+- [工作流编排](/zh/advanced/workflow) - 学习如何在控制台编排工作流
+- [OpenAPI 使用](/zh/api/openapi) - 通过 API 管理工作流

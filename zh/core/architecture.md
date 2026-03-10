@@ -588,5 +588,5 @@ WAITING -> RUNNING -> SUCCEEDED/FAILED/STOPPED
 
 ## 下一步
 
-- [任务](/zh/guide/task.md) - 了解任务的概念
-- [执行器](/zh/guide/worker.md) - 了解执行器的配置
+- [任务](/zh/core/task.md) - 了解任务的概念
+- [执行器](/zh/advanced/worker.md) - 了解执行器的配置

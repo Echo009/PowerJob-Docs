@@ -1075,6 +1075,6 @@ try {
 ## 参考资源
 
 - [GitHub 仓库](https://github.com/PowerJob/PowerJob)
-- [快速开始](/guide/quick-start)
-- [任务管理](/guide/task)
-- [工作流文档](/guide/workflow)
+- [快速开始](/start/quick-start)
+- [任务管理](/core/task)
+- [工作流文档](/advanced/workflow)

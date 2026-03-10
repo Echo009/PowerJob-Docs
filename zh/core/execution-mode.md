@@ -330,5 +330,5 @@ ProcessResult.defaultResult(taskResults);
 
 ## 下一步
 
-- [处理器开发](/zh/guide/processor) - 学习如何开发处理器
-- [任务运维](/zh/guide/operation) - 了解任务运维操作
+- [处理器开发](/zh/core/processor) - 学习如何开发处理器
+- [任务运维](/zh/ops/operation) - 了解任务运维操作

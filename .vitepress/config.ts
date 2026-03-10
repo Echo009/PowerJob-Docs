@@ -16,7 +16,7 @@ export default withMermaid({
       themeConfig: {
         nav: [
           { text: '首页', link: '/zh/' },
-          { text: '文档', link: '/zh/guide/introduction' },
+          { text: '文档', link: '/zh/start/introduction' },
           { text: 'API', link: '/zh/api/openapi' },
           {
             text: '相关链接',
@@ -27,40 +27,53 @@ export default withMermaid({
           }
         ],
         sidebar: {
-          '/zh/guide/': [
+          '/zh/start/': [
             {
               text: '快速开始',
               items: [
-                { text: '介绍', link: '/zh/guide/introduction' },
-                { text: '安装部署', link: '/zh/guide/installation' },
-                { text: '5分钟上手', link: '/zh/guide/quick-start' }
+                { text: '介绍', link: '/zh/start/introduction' },
+                { text: '安装部署', link: '/zh/start/installation' },
+                { text: '5分钟上手', link: '/zh/start/quick-start' }
               ]
-            },
+            }
+          ],
+          '/zh/core/': [
             {
-              text: '核心概念',
+              text: '核心功能',
               items: [
-                { text: '架构设计', link: '/zh/guide/architecture' },
-                { text: '任务', link: '/zh/guide/task' },
-                { text: '工作流', link: '/zh/guide/workflow' },
-                { text: '执行器', link: '/zh/guide/worker' }
+                { text: '架构设计', link: '/zh/core/architecture' },
+                { text: '任务配置', link: '/zh/core/task' },
+                { text: '处理器开发', link: '/zh/core/processor' },
+                { text: '执行模式', link: '/zh/core/execution-mode' },
+                { text: '调度策略', link: '/zh/core/schedule-strategy' }
               ]
-            },
+            }
+          ],
+          '/zh/advanced/': [
             {
-              text: '功能指南',
+              text: '进阶功能',
               items: [
-                { text: '定时策略', link: '/zh/guide/schedule-strategy' },
-                { text: '执行模式', link: '/zh/guide/execution-mode' },
-                { text: '工作流编排', link: '/zh/guide/workflow-design' },
-                { text: '任务运维', link: '/zh/guide/operation' },
-                { text: '报警通知', link: '/zh/guide/alert' }
+                { text: '工作流', link: '/zh/advanced/workflow' },
+                { text: '工作流编排', link: '/zh/advanced/workflow-design' },
+                { text: '高级任务', link: '/zh/advanced/advanced-task' },
+                { text: 'Worker 配置', link: '/zh/advanced/worker' }
               ]
-            },
+            }
+          ],
+          '/zh/integration/': [
             {
-              text: '开发指南',
+              text: '集成指南',
               items: [
-                { text: 'Spring Boot 集成', link: '/zh/guide/spring-boot' },
-                { text: '处理器开发', link: '/zh/guide/processor' },
-                { text: 'OpenAPI 使用', link: '/zh/guide/openapi' }
+                { text: 'Spring Boot 集成', link: '/zh/integration/spring-boot' }
+              ]
+            }
+          ],
+          '/zh/ops/': [
+            {
+              text: '运维管理',
+              items: [
+                { text: '告警配置', link: '/zh/ops/alert' },
+                { text: '运维操作', link: '/zh/ops/operation' }
               ]
             }
           ],
@@ -112,7 +125,7 @@ export default withMermaid({
       themeConfig: {
         nav: [
           { text: 'Home', link: '/en/' },
-          { text: 'Guide', link: '/en/guide/introduction' },
+          { text: 'Guide', link: '/en/start/introduction' },
           { text: 'API', link: '/en/api/openapi' },
           {
             text: 'Links',
@@ -123,40 +136,30 @@ export default withMermaid({
           }
         ],
         sidebar: {
-          '/en/guide/': [
+          '/en/start/': [
             {
               text: 'Getting Started',
               items: [
-                { text: 'Introduction', link: '/en/guide/introduction' },
-                { text: 'Installation', link: '/en/guide/installation' },
-                { text: 'Quick Start', link: '/en/guide/quick-start' }
+                { text: 'Introduction', link: '/en/start/introduction' },
+                { text: 'Installation', link: '/en/start/installation' },
+                { text: 'Quick Start', link: '/en/start/quick-start' }
               ]
-            },
+            }
+          ],
+          '/en/core/': [
             {
-              text: 'Core Concepts',
+              text: 'Core Features',
               items: [
-                { text: 'Architecture', link: '/en/guide/architecture' },
-                { text: 'Task', link: '/en/guide/task' },
-                { text: 'Workflow', link: '/en/guide/workflow' },
-                { text: 'Worker', link: '/en/guide/worker' }
+                { text: 'Architecture', link: '/en/core/architecture' },
+                { text: 'Task Configuration', link: '/en/core/task' }
               ]
-            },
+            }
+          ],
+          '/en/advanced/': [
             {
-              text: 'Feature Guide',
+              text: 'Advanced Features',
               items: [
-                { text: 'Schedule Strategy', link: '/en/guide/schedule-strategy' },
-                { text: 'Execution Mode', link: '/en/guide/execution-mode' },
-                { text: 'Workflow Design', link: '/en/guide/workflow-design' },
-                { text: 'Operation', link: '/en/guide/operation' },
-                { text: 'Alert', link: '/en/guide/alert' }
-              ]
-            },
-            {
-              text: 'Development Guide',
-              items: [
-                { text: 'Spring Boot Integration', link: '/en/guide/spring-boot' },
-                { text: 'Processor Development', link: '/en/guide/processor' },
-                { text: 'OpenAPI Usage', link: '/en/guide/openapi' }
+                { text: 'Worker Configuration', link: '/en/advanced/worker' }
               ]
             }
           ],

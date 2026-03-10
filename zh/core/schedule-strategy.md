@@ -254,5 +254,5 @@ request.setLifeCycle(new LifeCycle(startTime, endTime));
 
 ## 下一步
 
-- [执行模式](/zh/guide/execution-mode) - 了解任务的执行方式
-- [OpenAPI 使用](/zh/guide/openapi) - 通过 API 管理任务
+- [执行模式](/zh/core/execution-mode) - 了解任务的执行方式
+- [OpenAPI 使用](/zh/api/openapi) - 通过 API 管理任务

@@ -271,5 +271,5 @@ if (content.contains("关键任务")) {
 
 ## 下一步
 
-- [任务运维](/zh/guide/operation) - 了解任务运维操作
-- [OpenAPI 使用](/zh/guide/openapi) - 通过 API 配置告警
+- [任务运维](/zh/ops/operation) - 了解任务运维操作
+- [OpenAPI 使用](/zh/api/openapi) - 通过 API 配置告警

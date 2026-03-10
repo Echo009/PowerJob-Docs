@@ -12,7 +12,7 @@
   - Spring Boot 2.x/3.x 项目
 
 - **PowerJob Server**：
-  - 已完成 PowerJob Server 的部署（参考 [安装部署文档](/guide/installation)）
+  - 已完成 PowerJob Server 的部署（参考 [安装部署文档](/start/installation)）
   - 确认 Server 地址可访问（默认为 `127.0.0.1:7700`）
 
 ## 第一步：添加依赖
@@ -338,11 +338,11 @@ logger.error("错误信息", exception);
 
 恭喜你完成了第一个 PowerJob 任务！接下来可以学习：
 
-- **[核心概念](/guide/architecture)** - 了解 PowerJob 的架构设计和核心概念
-- **[任务详解](/guide/task)** - 深入学习各种任务类型的配置和使用
-- **[处理器开发](/guide/processor)** - 掌握单机、广播、MapReduce 等处理器的开发
-- **[工作流](/guide/workflow)** - 学习如何使用工作流编排复杂任务
-- **[OpenAPI](/guide/openapi)** - 了解如何通过 API 调用 PowerJob
+- **[核心概念](/core/architecture)** - 了解 PowerJob 的架构设计和核心概念
+- **[任务详解](/core/task)** - 深入学习各种任务类型的配置和使用
+- **[处理器开发](/core/processor)** - 掌握单机、广播、MapReduce 等处理器的开发
+- **[工作流](/advanced/workflow)** - 学习如何使用工作流编排复杂任务
+- **[OpenAPI](/api/openapi)** - 了解如何通过 API 调用 PowerJob
 
 ## 完整示例代码
 

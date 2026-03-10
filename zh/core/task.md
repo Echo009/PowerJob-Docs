@@ -636,6 +636,6 @@ public ProcessResult process(TaskContext context) throws Exception {
 
 ## 下一步
 
-- [执行器](/guide/worker) - 了解执行器的配置和使用
-- [处理器开发](/guide/processor) - 学习如何开发自定义处理器
-- [工作流](/guide/workflow) - 了解工作流的使用
+- [执行器](/advanced/worker) - 了解执行器的配置和使用
+- [处理器开发](/core/processor) - 学习如何开发自定义处理器
+- [工作流](/advanced/workflow) - 了解工作流的使用
