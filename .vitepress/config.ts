@@ -27,19 +27,19 @@ export default withMermaid({
           }
         ],
         sidebar: {
-          '/zh/start/': [
+          '/zh/': [
             {
               text: '快速开始',
+              collapsed: false,
               items: [
                 { text: '介绍', link: '/zh/start/introduction' },
                 { text: '安装部署', link: '/zh/start/installation' },
                 { text: '5分钟上手', link: '/zh/start/quick-start' }
               ]
-            }
-          ],
-          '/zh/core/': [
+            },
             {
               text: '核心功能',
+              collapsed: false,
               items: [
                 { text: '架构设计', link: '/zh/core/architecture' },
                 { text: '任务配置', link: '/zh/core/task' },
@@ -47,39 +47,35 @@ export default withMermaid({
                 { text: '执行模式', link: '/zh/core/execution-mode' },
                 { text: '调度策略', link: '/zh/core/schedule-strategy' }
               ]
-            }
-          ],
-          '/zh/advanced/': [
+            },
             {
               text: '进阶功能',
+              collapsed: false,
               items: [
                 { text: '工作流', link: '/zh/advanced/workflow' },
                 { text: '工作流编排', link: '/zh/advanced/workflow-design' },
                 { text: '高级任务', link: '/zh/advanced/advanced-task' },
                 { text: 'Worker 配置', link: '/zh/advanced/worker' }
               ]
-            }
-          ],
-          '/zh/integration/': [
+            },
             {
               text: '集成指南',
+              collapsed: false,
               items: [
                 { text: 'Spring Boot 集成', link: '/zh/integration/spring-boot' }
               ]
-            }
-          ],
-          '/zh/ops/': [
+            },
             {
               text: '运维管理',
+              collapsed: false,
               items: [
                 { text: '告警配置', link: '/zh/ops/alert' },
                 { text: '运维操作', link: '/zh/ops/operation' }
               ]
-            }
-          ],
-          '/zh/api/': [
+            },
             {
               text: 'API 参考',
+              collapsed: false,
               items: [
                 { text: 'OpenAPI 文档', link: '/zh/api/openapi' }
               ]
@@ -136,36 +132,34 @@ export default withMermaid({
           }
         ],
         sidebar: {
-          '/en/start/': [
+          '/en/': [
             {
               text: 'Getting Started',
+              collapsed: false,
               items: [
                 { text: 'Introduction', link: '/en/start/introduction' },
                 { text: 'Installation', link: '/en/start/installation' },
                 { text: 'Quick Start', link: '/en/start/quick-start' }
               ]
-            }
-          ],
-          '/en/core/': [
+            },
             {
               text: 'Core Features',
+              collapsed: false,
               items: [
                 { text: 'Architecture', link: '/en/core/architecture' },
                 { text: 'Task Configuration', link: '/en/core/task' }
               ]
-            }
-          ],
-          '/en/advanced/': [
+            },
             {
               text: 'Advanced Features',
+              collapsed: false,
               items: [
                 { text: 'Worker Configuration', link: '/en/advanced/worker' }
               ]
-            }
-          ],
-          '/en/api/': [
+            },
             {
               text: 'API Reference',
+              collapsed: false,
               items: [
                 { text: 'OpenAPI Documentation', link: '/en/api/openapi' }
               ]
