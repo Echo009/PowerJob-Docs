@@ -24,27 +24,25 @@
 工作流编辑器由以下区域组成：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph TB
-    subgraph 编辑器界面
-        A[顶部工具栏]
-        B[左侧节点面板]
-        C[中央画布区域]
-        D[右侧属性面板]
+    subgraph Editor ["🎨 工作流编辑器界面"]
+        direction TB
+        Top[顶部工具栏<br/>━━━━━━━━━━━━━━━<br/>保存/取消 | 缩放 | 布局]
+        Left[左侧节点面板<br/>━━━━━━━━━━━━━━━<br/>任务节点 | 决策节点 | 嵌套工作流]
+        Canvas[中央画布区域<br/>━━━━━━━━━━━━━━━<br/>节点显示 | 连线显示 | 拖拽操作]
+        Right[右侧属性面板<br/>━━━━━━━━━━━━━━━<br/>节点属性 | 连线属性]
+
+        Top --- Left
+        Left --- Canvas
+        Canvas --- Right
     end
 
-    A --> A1[保存/取消]
-    A --> A2[缩放控制]
-    A --> A3[布局调整]
-
-    B --> B1[任务节点]
-    B --> B2[决策节点]
-    B --> B3[嵌套工作流]
-
-    C --> C1[节点显示]
-    C --> C2[连线显示]
-
-    D --> D1[节点属性]
-    D --> D2[连线属性]
+    style Top fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style Left fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style Canvas fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#1565c0
+    style Right fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style Editor fill:#f5f5f5,stroke:#bdbdbd,stroke-width:1px
 ```
 
 ## 画布操作
@@ -253,12 +251,19 @@ result != null && result.contains("SUCCESS")
 - 设置为 `false` 的边：条件为假时执行
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[数据检查] --> B{数量>100?}
-    B -->|true| C[批量处理]
-    B -->|false| D[单条处理]
-    C --> E[结果汇总]
+    A([数据检查]) --> B{数量>100?}
+    B -->|true| C([批量处理])
+    B -->|false| D([单条处理])
+    C --> E([结果汇总])
     D --> E
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style B fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style C fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style D fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style E fill:#9c27b0,stroke:#7b1fa2,stroke-width:2px,color:#fff
 ```
 
 ### 并行分支
@@ -266,15 +271,24 @@ graph LR
 工作流支持并行执行多个分支：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph TB
-    A[开始] --> B[数据准备]
-    B --> C[分支1: 数据清洗]
-    B --> D[分支2: 数据验证]
-    B --> E[分支3: 数据备份]
-    C --> F[汇总处理]
-    D --> F
-    E --> F
-    F --> G[结束]
+    Start([开始]) --> Prep([数据准备])
+    Prep --> C1([分支1:<br/>数据清洗])
+    Prep --> C2([分支2:<br/>数据验证])
+    Prep --> C3([分支3:<br/>数据备份])
+    C1 --> Merge([汇总处理])
+    C2 --> Merge
+    C3 --> Merge
+    Merge --> End([结束])
+
+    style Start fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
+    style Prep fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style C1 fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style C2 fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style C3 fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style Merge fill:#9c27b0,stroke:#7b1fa2,stroke-width:2px,color:#fff
+    style End fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
 ```
 
 **注意事项**：
@@ -409,9 +423,14 @@ public ProcessResult process(TaskContext context) throws Exception {
 #### 数据传递示例
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[节点A: 生成数据] --> B[节点B: 使用数据]
-    B --> C[节点C: 汇总结果]
+    A([节点A<br/>生成数据]) -->|传递数据| B([节点B<br/>使用数据])
+    B -->|传递结果| C([节点C<br/>汇总结果])
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style B fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style C fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
 ```
 
 **节点A - 写入数据**：
@@ -578,10 +597,16 @@ return status == "success" && count > 100
 将复杂工作流拆分为多个子工作流分别测试：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph TB
-    A[主工作流] --> B[子工作流1: 数据准备]
-    A --> C[子工作流2: 数据处理]
-    A --> D[子工作流3: 结果输出]
+    A([主工作流<br/>流程编排]) --> B([子工作流1<br/>数据准备])
+    A --> C([子工作流2<br/>数据处理])
+    A --> D([子工作流3<br/>结果输出])
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
+    style B fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style C fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style D fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
 ```
 
 ## 高级功能
@@ -628,26 +653,42 @@ String tenantId = wfContext.fetchWorkflowContext().get("tenantId");
 #### 单条件分支
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[开始] --> B{数据完整?}
-    B -->|是| C[正常处理]
-    B -->|否| D[补全数据]
-    D --> C
-    C --> E[结束]
+    Start([开始]) --> Check{数据完整?}
+    Check -->|是| Process([正常处理])
+    Check -->|否| Complete([补全数据])
+    Complete --> Process
+    Process --> End([结束])
+
+    style Start fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
+    style Check fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style Complete fill:#ffeb3b,stroke:#f9a825,stroke-width:2px,color:#616161
+    style Process fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style End fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
 ```
 
 #### 多条件分支
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[开始] --> B{判断数据类型}
-    B -->|type=A| C[处理A类型]
-    B -->|type=B| D[处理B类型]
-    B -->|type=C| E[处理C类型]
-    C --> F[汇总]
-    D --> F
-    E --> F
-    F --> G[结束]
+    Start([开始]) --> Decision{判断数据类型}
+    Decision -->|type=A| ProcA([处理A类型])
+    Decision -->|type=B| ProcB([处理B类型])
+    Decision -->|type=C| ProcC([处理C类型])
+    ProcA --> Merge([汇总])
+    ProcB --> Merge
+    ProcC --> Merge
+    Merge --> End([结束])
+
+    style Start fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
+    style Decision fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style ProcA fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style ProcB fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style ProcC fill:#9c27b0,stroke:#7b1fa2,stroke-width:2px,color:#fff
+    style Merge fill:#7e57c2,stroke:#512da8,stroke-width:2px,color:#fff
+    style End fill:#9e9e9e,stroke:#616161,stroke-width:2px,color:#fff
 ```
 
 **实现方式**：使用多个决策节点串联
@@ -675,13 +716,20 @@ def status = context.get("status")
 #### 简单并行
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph TB
-    A[数据准备] --> B[任务1]
-    A --> C[任务2]
-    A --> D[任务3]
-    B --> E[结果汇总]
-    C --> E
-    D --> E
+    Prep([数据准备]) --> Task1([任务1])
+    Prep --> Task2([任务2])
+    Prep --> Task3([任务3])
+    Task1 --> Merge([结果汇总])
+    Task2 --> Merge
+    Task3 --> Merge
+
+    style Prep fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style Task1 fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style Task2 fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style Task3 fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style Merge fill:#9c27b0,stroke:#7b1fa2,stroke-width:2px,color:#fff
 ```
 
 #### 并行注意事项
@@ -819,14 +867,24 @@ try {
 将多个简单任务合并为一个 Map 任务：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    subgraph 优化前
-        A1[处理用户1] --> A2[处理用户2] --> A3[处理用户3]
+    subgraph Before["🔴 优化前：顺序执行"]
+        direction LR
+        A1([处理用户1]) --> A2([处理用户2]) --> A3([处理用户3])
     end
 
-    subgraph 优化后
-        B1[Map处理所有用户]
+    subgraph After["🟢 优化后：Map并行"]
+        direction LR
+        B1([Map处理<br/>所有用户])
     end
+
+    style A1 fill:#ef5350,stroke:#c62828,stroke-width:2px,color:#fff
+    style A2 fill:#ef5350,stroke:#c62828,stroke-width:2px,color:#fff
+    style A3 fill:#ef5350,stroke:#c62828,stroke-width:2px,color:#fff
+    style B1 fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style Before fill:#ffebee,stroke:#ef5350,stroke-width:2px
+    style After fill:#e8f5e9,stroke:#66bb6a,stroke-width:2px
 ```
 
 #### 3. 避免过度嵌套

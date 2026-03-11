@@ -104,14 +104,20 @@ CRON 是最灵活的定时策略，支持标准 CRON 表达式语法。
 ### 执行时序
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#f3e5f5', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 gantt
-    title FIXED_RATE 执行时序
-    dateFormat mm:ss
+    title FIXED_RATE 固定频率执行时序
+    dateFormat ss
+    axisFormat %M分%S秒
+
+    section 调度时间线
+    固定间隔(10秒) :milestone, interval, 00:00, 10s
+
     section 任务执行
-    任务1 :a1, 00:00, 2s
-    任务2 :a2, 00:10, 2s
-    任务3 :a3, 00:20, 3s
-    任务4 :a4, 00:30, 2s
+    第1次执行 :task1, 00:00, 2s
+    第2次执行 :task2, 00:10, 2s
+    第3次执行(耗时较长) :task3, 00:20, 3s
+    第4次执行 :task4, 00:30, 2s
 ```
 
 ## 固定延迟（FIXED_DELAY）
@@ -139,15 +145,18 @@ gantt
 ### 执行时序
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f5e9', 'primaryTextColor':'#2e7d32', 'primaryBorderColor':'#66bb6a', 'lineColor':'#66bb6a', 'secondaryColor':'#fff3e0', 'tertiaryColor':'#e3f2fd', 'background':'#ffffff'}}}%%
 gantt
-    title FIXED_DELAY 执行时序
-    dateFormat mm:ss
-    section 任务执行
-    任务1 :a1, 00:00, 5s
-    等待 :gap1, after a1, 2s
-    任务2 :a2, after gap1, 3s
-    等待 :gap2, after a2, 2s
-    任务3 :a3, after gap2, 4s
+    title FIXED_DELAY 固定延迟执行时序
+    dateFormat ss
+    axisFormat %M分%S秒
+
+    section 执行流程
+    第1次执行 :task1, 00:00, 5s
+    延迟等待(2秒) :delay1, after task1, 2s
+    第2次执行 :task2, after delay1, 3s
+    延迟等待(2秒) :delay2, after task2, 2s
+    第3次执行 :task3, after delay2, 4s
 ```
 
 ## 每日时间区间（DAILY_TIME_INTERVAL）

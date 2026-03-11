@@ -11,11 +11,17 @@
 工作流采用 DAG（Directed Acyclic Graph）结构进行编排，由**节点**和**边**组成：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[任务A] --> B[任务B]
-    A --> C[任务C]
-    B --> D[任务D]
+    A([任务A<br/>根节点]) --> B([任务B])
+    A --> C([任务C])
+    B --> D([任务D<br/>汇聚节点])
     C --> D
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style B fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style C fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style D fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
 ```
 
 - **节点（Node）**：执行单元，可以是任务、决策或嵌套工作流
@@ -80,10 +86,16 @@ client.runWorkflow(workflowId, "{\"initParam\":\"value\"}", 0);
 决策节点通过 JavaScript/Groovy 脚本进行条件判断，根据返回值（`true`/`false`）决定后续执行路径。
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[任务A] --> B{决策节点}
-    B -->|true| C[任务B]
-    B -->|false| D[任务C]
+    A([任务A]) --> B{决策节点<br/>条件判断}
+    B -->|条件为真| C([任务B])
+    B -->|条件为假| D([任务C])
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style B fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style C fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style D fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
 ```
 
 **脚本示例：**
@@ -106,9 +118,14 @@ status === "success";
 - 多层嵌套
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph LR
-    A[任务A] --> B[子工作流]
-    B --> C[任务B]
+    A([任务A]) --> B([子工作流<br/>嵌套执行])
+    B --> C([任务B])
+
+    style A fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style B fill:#9c27b0,stroke:#7b1fa2,stroke-width:2px,color:#fff
+    style C fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
 ```
 
 ## 错误处理

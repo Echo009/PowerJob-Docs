@@ -5,77 +5,71 @@
 PowerJob 采用 **Server-Worker** 分离架构，支持水平扩展和高可用部署。
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 graph TB
-    subgraph "PowerJob Server 集群"
-        Server1[Server 节点 1]
-        Server2[Server 节点 2]
-        Server3[Server 节点 N]
+    subgraph Server ["🖥️ PowerJob Server 集群"]
+        direction TB
+        S1((Server 1))
+        S2((Server 2))
+        SN((Server N))
 
-        subgraph "Server 核心组件"
+        subgraph Core ["核心组件"]
+            direction LR
             Scheduler[调度器<br/>PowerScheduleService]
             Workflow[工作流引擎<br/>WorkflowService]
             Console[控制台<br/>Web UI]
             Dispatcher[派发服务<br/>DispatchService]
         end
 
-        Server1 --> Scheduler
-        Server1 --> Workflow
-        Server1 --> Console
-        Server1 --> Dispatcher
+        S1 --- Core
+        S2 --- Core
+        SN --- Core
 
-        Server2 --> Scheduler
-        Server2 --> Workflow
-        Server2 --> Console
-        Server2 --> Dispatcher
-
-        Server3 --> Scheduler
-        Server3 --> Workflow
-        Server3 --> Console
-        Server3 --> Dispatcher
+        S1 <==>"集群通信<br/>(Server-Server)" S2
+        S2 <==>"集群通信<br/>(Server-Server)" SN
+        S1 <==>"集群通信<br/>(Server-Server)" SN
     end
 
-    subgraph "存储层"
-        DB[(关系型数据库<br/>MySQL/H2/PostgreSQL)]
+    subgraph Storage ["💾 存储层"]
+        DB[(关系型数据库<br/>MySQL/PostgreSQL/H2)]
         OCS[(对象存储<br/>本地/OSS/S3)]
     end
 
-    subgraph "Worker 集群 - 应用 A"
-        WorkerA1[Worker 节点 1]
-        WorkerA2[Worker 节点 2]
+    subgraph WorkerA ["👷 Worker 集群 - 应用 A"]
+        WA1[Worker A1]
+        WA2[Worker A2]
     end
 
-    subgraph "Worker 集群 - 应用 B"
-        WorkerB1[Worker 节点 1]
-        WorkerB2[Worker 节点 2]
+    subgraph WorkerB ["👷 Worker 集群 - 应用 B"]
+        WB1[Worker B1]
+        WB2[Worker B2]
     end
 
-    subgraph "Worker 集群 - 应用 C"
-        WorkerC1[Worker 节点 1]
+    subgraph WorkerC ["👷 Worker 集群 - 应用 C"]
+        WC1[Worker C1]
     end
 
-    Server1 <--> Server2
-    Server2 <--> Server3
-    Server1 <--> Server3
+    Server ==>|读写| DB
+    Server ==>|读写| OCS
 
-    Server1 --> DB
-    Server2 --> DB
-    Server3 --> DB
+    Dispatcher -.->|任务调度| WA1
+    Dispatcher -.->|任务调度| WA2
+    Dispatcher -.->|任务调度| WB1
+    Dispatcher -.->|任务调度| WB2
+    Dispatcher -.->|任务调度| WC1
 
-    Server1 --> OCS
-    Server2 --> OCS
-    Server3 --> OCS
+    WA1 -.->|心跳/日志| Server
+    WA2 -.->|心跳/日志| Server
+    WB1 -.->|心跳/日志| Server
+    WB2 -.->|心跳/日志| Server
+    WC1 -.->|心跳/日志| Server
 
-    Dispatcher -.->|任务调度| WorkerA1
-    Dispatcher -.->|任务调度| WorkerA2
-    Dispatcher -.->|任务调度| WorkerB1
-    Dispatcher -.->|任务调度| WorkerB2
-    Dispatcher -.->|任务调度| WorkerC1
-
-    WorkerA1 -.->|心跳/日志上报| Server1
-    WorkerA2 -.->|心跳/日志上报| Server2
-    WorkerB1 -.->|心跳/日志上报| Server1
-    WorkerB2 -.->|心跳/日志上报| Server3
-    WorkerC1 -.->|心跳/日志上报| Server2
+    style Server fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
+    style Storage fill:#7e57c2,stroke:#512da8,stroke-width:2px,color:#fff
+    style WorkerA fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style WorkerB fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style WorkerC fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    style Core fill:#e3f2fd,stroke:#1976d2,stroke-width:1px
 ```
 
 ### 架构说明
@@ -120,19 +114,37 @@ powerjob-server/
 **调度流程**：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant S as 调度器
-    participant DB as 数据库
-    participant TW as 时间轮
-    participant D as 派发服务
+    autonumber
 
-    S->>DB: 查询需要调度的任务
-    DB-->>S: 返回任务列表
-    S->>DB: 创建任务实例记录
-    S->>TW: 推入时间轮
-    TW-->>D: 到达触发时间
-    D->>D: 派发任务到 Worker
-    S->>DB: 更新下次触发时间
+    participant Scheduler as 调度器<br/>PowerScheduleService
+    participant DB as 数据库
+    participant TimeWheel as 时间轮<br/>TimeWheel
+    participant Dispatcher as 派发服务<br/>DispatchService
+
+    rect rgb(227, 242, 253)
+        Note over Scheduler,DB: 步骤1: 查询待调度任务
+        Scheduler->>DB: 查询需要调度的任务<br/>(按应用分组)
+        DB-->>Scheduler: 返回任务列表
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Scheduler,DB: 步骤2: 创建任务实例
+        Scheduler->>DB: 创建任务实例记录<br/>(状态: WAITING_DISPATCH)
+        Scheduler->>DB: 更新下次触发时间
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Scheduler,Dispatcher: 步骤3: 推入时间轮
+        Scheduler->>TimeWheel: 推入时间轮<br/>(高效延迟调度)
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Scheduler,Dispatcher: 步骤4: 触发与派发
+        TimeWheel-->>Dispatcher: 到达触发时间
+        Dispatcher->>Dispatcher: 派发任务到 Worker<br/>(选择最优节点)
+    end
 ```
 
 **关键设计**：
@@ -154,20 +166,38 @@ sequenceDiagram
 **工作流执行流程**：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant User as 用户
-    participant WS as WorkflowService
-    participant WIM as WorkflowInstanceManager
-    participant TT as TaskTracker
+    autonumber
 
-    User->>WS: 触发工作流
-    WS->>WIM: 创建工作流实例
-    WIM->>WIM: 初始化 DAG 节点状态
-    WIM->>TT: 派发根节点任务
-    TT-->>WIM: 节点完成
-    WIM->>WIM: 检查并启动下一批节点
-    WIM->>WIM: 重复直到所有节点完成
-    WIM-->>User: 工作流完成
+    participant User as 👤 用户/触发器
+    participant WS as WorkflowService<br/>工作流服务
+    participant WIM as WorkflowInstanceManager<br/>实例管理器
+    participant TT as TaskTracker<br/>任务追踪器
+
+    rect rgb(227, 242, 253)
+        Note over User,WIM: 初始化阶段
+        User->>WS: 触发工作流
+        WS->>WIM: 创建工作流实例
+        WIM->>WIM: 初始化 DAG 节点状态<br/>(识别根节点)
+    end
+
+    rect rgb(232, 245, 233)
+        Note over User,WIM: 执行阶段
+        WIM->>TT: 派发根节点任务
+        TT-->>WIM: 节点完成
+        WIM->>WIM: 检查依赖并启动<br/>下一批可执行节点
+    end
+
+    rect rgb(255, 243, 224)
+        Note over User,WIM: 循环执行
+        WIM->>WIM: 重复直到所有节点完成
+    end
+
+    rect rgb(232, 245, 233)
+        Note over User,WIM: 完成阶段
+        WIM-->>User: 工作流完成<br/>(返回最终结果)
+    end
 ```
 
 #### 派发服务（DispatchService）
@@ -351,73 +381,116 @@ WPT_HANDLER_STOP_INSTANCE = "stopInstance"   // 停止实例
 ### 任务调度流程
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant S as 调度器
+    autonumber
+
+    participant Scheduler as 调度器
     participant DB as 数据库
-    participant TW as 时间轮
-    participant D as 派发服务
-    participant WC as Worker集群
-    participant W as Worker
+    participant TimeWheel as 时间轮
+    participant Dispatcher as 派发服务
+    participant Worker as Worker
     participant TT as TaskTracker
     participant PT as ProcessorTracker
 
-    S->>DB: 查询需要调度的任务
-    DB-->>S: 返回任务列表
-    S->>DB: 创建任务实例 (WAITING_DISPATCH)
-    S->>TW: 推入时间轮
-    Note over TW: 等待触发时间
-    TW-->>D: 触发调度
-    D->>DB: 查询可用 Worker
-    D->>W: 发送调度请求 (ServerScheduleJobReq)
-    W-->>D: 接收确认
-    D->>DB: 更新状态 (WAITING_WORKER_RECEIVE)
+    rect rgb(227, 242, 253)
+        Note over Scheduler,DB: 调度准备
+        Scheduler->>DB: 查询需要调度的任务
+        DB-->>Scheduler: 返回任务列表
+        Scheduler->>DB: 创建任务实例<br/>(状态: WAITING_DISPATCH)
+    end
 
-    W->>TT: 创建 TaskTracker
-    TT->>PT: 派发子任务
-    PT->>PT: 执行任务
-    PT-->>TT: 上报子任务状态
-    TT->>W: 汇总任务状态
-    W->>D: 上报实例状态
-    D->>DB: 更新实例状态 (RUNNING -> SUCCEEDED/FAILED)
+    rect rgb(232, 245, 233)
+        Note over Scheduler,Dispatcher: 延迟等待
+        Scheduler->>TimeWheel: 推入时间轮
+        Note over TimeWheel: 等待触发时间...
+        TimeWheel-->>Dispatcher: 触发调度
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Scheduler,Worker: 任务派发
+        Dispatcher->>DB: 查询可用 Worker
+        Dispatcher->>Worker: 发送调度请求<br/>(ServerScheduleJobReq)
+        Worker-->>Dispatcher: 接收确认
+        Dispatcher->>DB: 更新状态<br/>(WAITING_WORKER_RECEIVE)
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Worker,PT: 任务执行
+        Worker->>TT: 创建 TaskTracker
+        TT->>PT: 派发子任务
+        PT->>PT: 执行任务<br/>(调用业务代码)
+        PT-->>TT: 上报子任务状态
+        TT->>Worker: 汇总任务状态
+    end
+
+    rect rgb(227, 242, 253)
+        Note over Worker,DB: 状态上报
+        Worker->>Dispatcher: 上报实例状态
+        Dispatcher->>DB: 更新实例状态<br/>(RUNNING → SUCCEEDED/FAILED)
+    end
 ```
 
 ### 日志上报流程
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant W as Worker
-    participant LH as 日志处理器
-    participant S as Server
+    autonumber
+
+    participant Worker as Worker
+    participant Logger as 日志处理器<br/>LogHandler
+    participant Server as Server
     participant DB as 数据库
 
-    W->>LH: 生成执行日志
-    LH->>LH: 本地缓存日志
-    Note over LH: 每 5 秒批量上报
-    LH->>S: 批量上报日志
-    S->>DB: 持久化日志
-    S-->>LH: 确认接收
-    LH->>LH: 清理已上报日志
+    rect rgb(227, 242, 253)
+        Note over Worker,Logger: 日志生成
+        Worker->>Logger: 生成执行日志
+        Logger->>Logger: 本地缓存日志<br/>(减少网络开销)
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Logger,DB: 批量上报(每5秒)
+        Logger->>Server: 批量上报日志<br/>(LogReportRequest)
+        Server->>DB: 持久化日志
+        DB-->>Server: 写入完成
+        Server-->>Logger: 确认接收
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Logger: 清理已上报
+        Logger->>Logger: 清理已上报日志<br/>(释放内存)
+    end
 ```
 
 ### 心跳保活流程
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant W as Worker
-    participant HR as 健康报告器
-    participant S as Server
-    participant CSH as ClusterStatusHolder
+    autonumber
 
-    loop 每 30 秒
-        W->>HR: 触发健康报告
-        HR->>W: 收集系统指标
-        HR->>S: 发送心跳 (WorkerHeartbeat)
-        S->>CSH: 更新 Worker 状态
-        CSH->>CSH: 刷新活跃时间
-        S-->>HR: 确认接收
+    participant Worker as Worker
+    participant Reporter as 健康报告器<br/>HealthReporter
+    participant Server as Server
+    participant Status as ClusterStatusHolder<br/>集群状态管理
+
+    rect rgb(227, 242, 253)
+        Note over Worker,Status: 心跳上报周期(每30秒)
+        loop 定时心跳上报
+            Worker->>Reporter: 触发健康报告
+            Reporter->>Worker: 收集系统指标<br/>(CPU/内存/任务数)
+            Reporter->>Server: 发送心跳<br/>(WorkerHeartbeat)
+            Server->>Status: 更新 Worker 状态
+            Status->>Status: 刷新活跃时间戳
+            Server-->>Reporter: 确认接收
+        end
     end
 
-    Note over CSH: 超过 90 秒未收到心跳<br/>标记为超时
+    rect rgb(255, 243, 224)
+        Note over Status: 超时检测
+        Note over Status: 超过 90 秒未收到心跳<br/>标记 Worker 为超时/不可用
+    end
 ```
 
 ## 高可用设计

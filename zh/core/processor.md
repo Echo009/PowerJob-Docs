@@ -83,29 +83,41 @@ public class CacheClearProcessor implements BroadcastProcessor {
 ```
 ### 执行流程
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant S as Server
-    participant W as Worker 集群
+    autonumber
 
-    Note over W: 所有节点并行执行 process()
+    participant Server as Server<br/>调度服务器
+    participant Worker1 as Worker 1
+    participant Worker2 as Worker 2
+    participant Worker3 as Worker 3
 
-    S->>W: preProcess (单节点)
-    W-->>S: 前置完成
-
-    par 并行执行
-        S->>W1: process
-    and
-        S->>W2: process
-    and
-        S->>W3: process
+    rect rgb(227, 242, 253)
+        Note over Server,Worker3: 前置阶段 - 单节点执行
+        Server->>Worker1: preProcess()<br/>前置处理
+        Worker1-->>Server: 前置完成
     end
 
-    W1-->>S: 完成
-    W2-->>S: 完成
-    W3-->>S: 完成
+    rect rgb(232, 245, 233)
+        Note over Server,Worker3: 并行执行阶段 - 所有节点
+        par 所有Worker并行执行
+            Server->>Worker1: process()<br/>业务处理
+        and
+            Server->>Worker2: process()<br/>业务处理
+        and
+            Server->>Worker3: process()<br/>业务处理
+        end
 
-    S->>W: postProcess (单节点汇总)
-    W-->>S: 最终结果
+        Worker1-->>Server: 执行完成
+        Worker2-->>Server: 执行完成
+        Worker3-->>Server: 执行完成
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Server,Worker3: 后置阶段 - 单节点汇总
+        Server->>Worker1: postProcess()<br/>汇总所有结果
+        Worker1-->>Server: 最终结果
+    end
 ```
 ## MapProcessor
 Map 处理器，支持任务拆分和分布式执行。
@@ -194,29 +206,41 @@ public class StatisticsProcessor implements MapReduceProcessor {
 ```
 ### 执行流程
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 sequenceDiagram
-    participant S as Server
-    participant W1 as Worker 1
-    participant W2 as Worker 2
-    participant W3 as Worker 3
+    autonumber
 
-    S->>W1: 根任务 (Map)
-    W1-->>S: 子任务列表
+    participant Server as Server<br/>调度服务器
+    participant Worker1 as Worker 1
+    participant Worker2 as Worker 2
+    participant Worker3 as Worker 3
 
-    par 并行执行子任务
-        S->>W1: 子任务1
-    and
-        S->>W2: 子任务2
-    and
-        S->>W3: 子任务3
+    rect rgb(227, 242, 253)
+        Note over Server,Worker3: Map 阶段 - 任务拆分
+        Server->>Worker1: 根任务 (Map)<br/>执行任务拆分
+        Worker1-->>Server: 返回子任务列表<br/>(subTask1, subTask2, subTask3)
     end
 
-    W1-->>S: 结果1
-    W2-->>S: 结果2
-    W3-->>S: 结果3
+    rect rgb(232, 245, 233)
+        Note over Server,Worker3: 并行执行子任务
+        par 分布式并行执行
+            Server->>Worker1: 子任务1
+        and
+            Server->>Worker2: 子任务2
+        and
+            Server->>Worker3: 子任务3
+        end
 
-    S->>W1: Reduce (汇总)
-    W1-->>S: 最终结果
+        Worker1-->>Server: 结果1
+        Worker2-->>Server: 结果2
+        Worker3-->>Server: 结果3
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Server,Worker3: Reduce 阶段 - 结果汇总
+        Server->>Worker1: Reduce()<br/>汇总所有子任务结果
+        Worker1-->>Server: 最终汇总结果
+    end
 ```
 ## TaskContext 详解
 ### 核心属性

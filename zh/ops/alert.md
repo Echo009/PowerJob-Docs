@@ -141,19 +141,24 @@ request.setAlarmConfig(alarmConfig);
 沉默窗口机制避免告警风暴：
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#ffebee', 'primaryTextColor':'#c62828', 'primaryBorderColor':'#ef5350', 'lineColor':'#ef5350', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
 gantt
-    title 告警抑制示例
-    dateFormat mm:ss
+    title 告警抑制机制示意图
+    dateFormat ss
+    axisFormat %M分%S秒
+
     section 任务执行
-    失败1 :crit, a1, 00:00, 1s
-    失败2 :crit, a2, 00:30, 1s
-    失败3 :crit, a3, 01:00, 1s
-    section 告警
-    发送告警 :milestone, alert1, 01:00, 0s
-    沉默期 :silent, after alert1, 10m
-    失败4 :crit, a4, 02:00, 1s
-    失败5 :crit, a5, 03:00, 1s
-    发送告警 :milestone, alert2, after silent, 0s
+    第1次失败 :crit, task1, 00:00, 1s
+    第2次失败 :crit, task2, 00:30, 1s
+    第3次失败 :crit, task3, 01:00, 1s
+    沉默期内失败 :active, task4, 02:00, 1s
+    沉默期内失败 :active, task5, 03:00, 1s
+    沉默期后失败 :crit, task6, 11:00, 1s
+
+    section 告警状态
+    触发告警 :milestone, alert1, 01:00, 0s
+    沉默期 :silence, 01:00, 10m
+    再次触发 :milestone, alert2, 11:00, 0s
 ```
 
 ## 通知用户配置
