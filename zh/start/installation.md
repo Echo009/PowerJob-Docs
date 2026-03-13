@@ -77,11 +77,13 @@ docker-compose logs -f powerjob-server
 
 4. **访问控制台**
 
-打开浏览器访问：http://localhost:7703
+打开浏览器访问：http://localhost:7700
 
 默认账号密码：
-- 用户名：`powerjob_admin`
-- 密码：`powerjob_admin`
+- 用户名：`ADMIN`
+- 密码：配置文件中 `oms.auth.initiliaze.admin.password` 的值（默认为 `powerjob_admin`）
+
+> **注意**：首次登录后请立即修改密码！
 
 ### 服务说明
 
@@ -90,7 +92,7 @@ docker-compose logs -f powerjob-server
 | 服务 | 容器名 | 端口映射 | 说明 |
 |------|--------|----------|------|
 | MySQL | powerjob-mysql | 3307:3306 | 数据库服务 |
-| Server | powerjob-server | 7700:7700, 10010:10010 | 调度服务器 |
+| Server | powerjob-server | 7700:7700, 10086:10086, 10010:10010, 10077:10077 | 调度服务器 |
 | Worker Samples | powerjob-worker-samples | 8081:8081, 27777:27777 | 示例执行器 |
 
 ### 停止服务
@@ -421,7 +423,7 @@ oms.container.retention.remote=-1  # 远程容器（-1 表示不清理）
 #### 缓存配置
 
 ```properties
-# 实例元数据缓存大小
+# 实例元数据缓存大小（开发环境推荐 1024，生产环境推荐 2048）
 oms.instance.metadata.cache.size=2048
 ```
 
@@ -479,7 +481,7 @@ ss -tlnp | grep -E "7700|10010"
 
 ```bash
 # 访问健康检查接口
-curl http://localhost:7703/health
+curl http://localhost:7700/actuator/health
 
 # 预期返回
 {"status":"UP"}
@@ -497,11 +499,13 @@ mysql -h localhost -u root -p -e "USE powerjob_daily; SHOW TABLES;"
 
 #### 4. Web 控制台访问
 
-打开浏览器访问：http://localhost:7703
+打开浏览器访问：http://localhost:7700
 
 使用默认账号登录：
-- 用户名：`powerjob_admin`
-- 密码：`powerjob_admin`
+- 用户名：`ADMIN`
+- 密码：配置文件中 `oms.auth.initiliaze.admin.password` 的值（默认为 `powerjob_admin`）
+
+> **注意**：首次登录后请立即修改密码！
 
 登录成功后，应该能看到控制台主界面。
 
@@ -617,7 +621,7 @@ environment:
 
 1. 检查 Server 端口是否开放
 ```bash
-curl http://<server-ip>:7703/health
+curl http://<server-ip>:7700/actuator/health
 ```
 
 2. 检查 Worker 配置的 Server 地址是否正确
@@ -683,7 +687,7 @@ fi
 
 # 检查 HTTP 接口
 echo -n "检查健康接口... "
-if curl -s http://localhost:7703/health | grep -q "UP"; then
+if curl -s http://localhost:7700/actuator/health | grep -q "UP"; then
     echo "✓ 正常"
 else
     echo "✗ 异常"

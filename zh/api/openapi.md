@@ -259,11 +259,16 @@ curl -X POST "http://localhost:7700/openApi/assert?appName=powerjob-worker-sampl
 | maxWorkerCount | Integer | 否 | 最大 Worker 节点数 |
 | notifyUserIds | List&lt;Long&gt; | 否 | 报警通知用户 ID 列表 |
 | dispatchStrategy | Enum | 否 | 派发策略 |
+| dispatchStrategyConfig | String | 否 | 派发策略配置 |
 | tag | String | 否 | 任务标签 |
+| lifeCycle | LifeCycle | 否 | 生命周期 |
+| alarmConfig | AlarmConfig | 否 | 报警配置 |
+| logConfig | LogConfig | 否 | 日志配置 |
+| advancedRuntimeConfig | JobAdvancedRuntimeConfig | 否 | 高级运行时配置 |
 
 **枚举类型说明**：
 
-- **TimeExpressionType**：`API`(1), `CRON`(2), `FIXED_RATE`(3), `FIXED_DELAY`(4), `WORKFLOW`(5)
+- **TimeExpressionType**：`API`(1), `CRON`(2), `FIXED_RATE`(3), `FIXED_DELAY`(4), `WORKFLOW`(5), `DAILY_TIME_INTERVAL`(11)
 - **ExecuteType**：`STANDALONE`(1), `BROADCAST`(2), `MAP_REDUCE`(3), `MAP`(4)
 - **ProcessorType**：`BUILT_IN`(1), `EXTERNAL`(4)
 
@@ -297,11 +302,44 @@ curl -X POST "http://localhost:7700/openApi/saveJob" \
 }
 ```
 
-#### 2. 运行任务
+#### 2. 运行任务（简单参数）
+
+**接口地址**：`POST /openApi/runJob`
+
+**请求参数**：
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| appId | Long | 是 | 应用 ID |
+| jobId | Long | 是 | 任务 ID |
+| instanceParams | String | 否 | 运行时参数 |
+| delay | Long | 否 | 延迟执行时间（毫秒） |
+
+**请求示例**：
+
+```bash
+curl -X POST "http://localhost:7700/openApi/runJob" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "X-POWERJOB-ACCESS-TOKEN: your-token" \
+  -H "X-POWERJOB-APP-ID: 1001" \
+  -d "appId=1001&jobId=123456&delay=0"
+```
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "data": 789012,
+  "message": null
+}
+```
+
+#### 3. 运行任务（完整参数）
 
 **接口地址**：`POST /openApi/runJob2`
 
-**请求参数**：`RunJobRequest`
+**请求参数**：`RunJobRequest` (JSON Body)
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
@@ -336,7 +374,7 @@ curl -X POST "http://localhost:7700/openApi/runJob2" \
 }
 ```
 
-#### 3. 获取任务详情
+#### 4. 获取任务详情
 
 **接口地址**：`POST /openApi/fetchJob`
 
@@ -357,7 +395,7 @@ curl -X POST "http://localhost:7700/openApi/fetchJob" \
   -d "jobId=123456&appId=1001"
 ```
 
-#### 4. 查询任务列表
+#### 5. 查询任务列表
 
 **接口地址**：`POST /openApi/queryJob`
 
@@ -366,12 +404,27 @@ curl -X POST "http://localhost:7700/openApi/fetchJob" \
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | idEq | Long | 精确匹配 ID |
+| idLt | Long | ID 小于 |
+| idGt | Long | ID 大于 |
 | jobNameEq | String | 精确匹配任务名称 |
 | jobNameLike | String | 模糊匹配任务名称 |
+| jobDescriptionLike | String | 模糊匹配任务描述 |
+| jobParamsLike | String | 模糊匹配任务参数 |
 | statusIn | List&lt;Integer&gt; | 状态列表 |
 | timeExpressionTypeIn | List&lt;Integer&gt; | 时间表达式类型列表 |
 | executeTypeIn | List&lt;Integer&gt; | 执行类型列表 |
 | processorTypeIn | List&lt;Integer&gt; | 处理器类型列表 |
+| processorInfoEq | String | 精确匹配处理器信息 |
+| processorInfoLike | String | 模糊匹配处理器信息 |
+| nextTriggerTimeGt | Long | 下次触发时间大于 |
+| nextTriggerTimeLt | Long | 下次触发时间小于 |
+| notifyUserIdsLike | String | 模糊匹配通知用户 ID |
+| gmtCreateLt | Date | 创建时间早于 |
+| gmtCreateGt | Date | 创建时间晚于 |
+| gmtModifiedLt | Date | 修改时间早于 |
+| gmtModifiedGt | Date | 修改时间晚于 |
+| dispatchStrategyEq | Integer | 精确匹配派发策略 |
+| tagEq | String | 精确匹配标签 |
 | index | Integer | 页码（从 0 开始） |
 | pageSize | Integer | 页大小 |
 | sortBy | String | 排序字段 |
@@ -391,7 +444,7 @@ curl -X POST "http://localhost:7700/openApi/queryJob" \
   }'
 ```
 
-#### 5. 禁用/启用任务
+#### 6. 禁用/启用任务
 
 **接口地址**：
 - 禁用：`POST /openApi/disableJob`
@@ -414,7 +467,7 @@ curl -X POST "http://localhost:7700/openApi/disableJob" \
   -d "jobId=123456&appId=1001"
 ```
 
-#### 6. 删除任务
+#### 7. 删除任务
 
 **接口地址**：`POST /openApi/deleteJob`
 
@@ -529,12 +582,19 @@ curl -X POST "http://localhost:7700/openApi/deleteJob" \
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | instanceIdEq | Long | 精确匹配实例 ID |
+| instanceIdLt | Long | 实例 ID 小于 |
+| instanceIdGt | Long | 实例 ID 大于 |
 | outerKeyEq | String | 根据业务外键查询 |
 | jobIdEq | Long | 任务 ID |
 | statusIn | List&lt;Integer&gt; | 状态列表 |
-| index | Integer | 页码 |
+| gmtCreateLt | Date | 创建时间早于 |
+| gmtCreateGt | Date | 创建时间晚于 |
+| gmtModifiedLt | Date | 修改时间早于 |
+| gmtModifiedGt | Date | 修改时间晚于 |
+| index | Integer | 页码（从 0 开始） |
 | pageSize | Integer | 页大小 |
 | sortBy | String | 排序字段 |
+| asc | Boolean | 是否升序 |
 
 ### 工作流管理接口
 
@@ -554,7 +614,9 @@ curl -X POST "http://localhost:7700/openApi/deleteJob" \
 | maxWfInstanceNum | Integer | 否 | 最大同时运行实例数，默认 1 |
 | enable | Boolean | 否 | 是否启用，默认 true |
 | notifyUserIds | List&lt;Long&gt; | 否 | 报警通知用户 ID 列表 |
-| dag | PEWorkflowDAG | 是 | 工作流 DAG 结构 |
+| dag | PEWorkflowDAG | 否 | 工作流 DAG 结构 |
+| lifeCycle | LifeCycle | 否 | 生命周期 |
+| advancedRuntimeConfig | WorkflowAdvancedRuntimeConfig | 否 | 高级运行时配置 |
 
 **请求示例**：
 
@@ -599,13 +661,13 @@ curl -X POST "http://localhost:7700/openApi/runWorkflow" \
 
 **接口地址**：`POST /openApi/addWorkflowNode`
 
-**请求参数**：`List<SaveWorkflowNodeRequest>`
+**请求参数**：`List<SaveWorkflowNodeRequest>` (JSON Body)
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | id | Long | 否 | 节点 ID |
 | type | Integer | 是 | 节点类型 |
-| jobId | Long | 条件必填 | 任务 ID（任务节点必填） |
+| jobId | Long | 条件必填 | 任务 ID（任务节点或嵌套工作流节点必填） |
 | nodeName | String | 否 | 节点别名 |
 | nodeParams | String | 否 | 节点参数 |
 | enable | Boolean | 否 | 是否启用，默认 true |

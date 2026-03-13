@@ -64,12 +64,12 @@ PowerJob 支持多种调度策略：
 
 #### 执行类型 (executeType)
 
-| 类型 | 说明 | 接口 |
-|------|------|------|
-| 单机执行 (STANDALONE) | 任务只在一台机器上执行 | `BasicProcessor` |
-| 广播执行 (BROADCAST) | 所有机器同时执行 | `BroadcastProcessor` |
-| Map 执行 (MAP) | 拆分任务并行执行 | `MapProcessor` |
-| MapReduce 执行 (MAP_REDUCE) | 拆分任务并汇总结果 | `MapReduceProcessor` |
+| 类型 | 值 | 说明 | 接口 |
+|------|-----|------|------|
+| 单机执行 (STANDALONE) | 1 | 任务只在一台机器上执行 | `BasicProcessor` |
+| 广播执行 (BROADCAST) | 2 | 所有机器同时执行 | `BroadcastProcessor` |
+| MapReduce 执行 (MAP_REDUCE) | 3 | 拆分任务并汇总结果 | `MapReduceProcessor` |
+| Map 执行 (MAP) | 4 | 拆分任务并行执行 | `MapProcessor` |
 
 #### 处理器类型 (processorType)
 
@@ -108,11 +108,11 @@ PowerJob 支持多种调度策略：
 
 #### 派发策略 (dispatchStrategy)
 
-| 策略 | 说明 |
-|------|------|
-| 健康度优先 (HEALTH_FIRST) | 优先选择健康的机器执行 |
-| 随机 (RANDOM) | 随机选择机器执行 |
-| 指定执行 (SPECIFY) | 仅在指定的机器上执行 |
+| 策略 | 值 | 说明 |
+|------|-----|------|
+| 健康度优先 (HEALTH_FIRST) | 1 | 优先选择健康的机器执行 |
+| 随机 (RANDOM) | 2 | 随机选择机器执行 |
+| 指定执行 (SPECIFY) | 11 | 仅在指定的机器上执行 |
 
 ### 高级配置
 

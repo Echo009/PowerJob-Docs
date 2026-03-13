@@ -170,8 +170,10 @@ public class MyFirstProcessor implements BasicProcessor {
    - 默认访问地址：`http://127.0.0.1:7700`
 
 2. **登录控制台**
-   - 默认账号：`admin`
-   - 默认密码：`admin`
+   - 默认账号：`ADMIN`
+   - 默认密码：配置文件中 `oms.auth.initiliaze.admin.password` 的值（默认为 `powerjob_admin`）
+
+   > **注意**：首次登录后请立即修改密码！
 
 3. **注册应用**
    - 点击左侧菜单「应用管理」

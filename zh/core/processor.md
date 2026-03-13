@@ -124,9 +124,17 @@ Map 处理器，支持任务拆分和分布式执行。
 ### 接口定义
 ```java
 public interface MapProcessor extends BasicProcessor {
-    default void map(List<?> taskList, String taskName) throws PowerJobCheckedException;
+
+    int RECOMMEND_BATCH_SIZE = 200;
+
+    default void map(List<?> taskList, String taskName) throws PowerJobCheckedException {
+        // 内部实现
     }
-    default boolean isRootTask();
+
+    default boolean isRootTask() {
+        TaskDO task = ThreadLocalStore.getTask();
+        return TaskConstant.ROOT_TASK_NAME.equals(task.getTaskName());
+    }
 }
 ```
 ### 使用示例
@@ -248,15 +256,18 @@ sequenceDiagram
 |-----|------|------|
 | jobId | Long | 任务 ID |
 | instanceId | Long | 任务实例 ID |
+| subInstanceId | Long | 子实例 ID（MapReduce 模式） |
 | taskId | String | 任务 ID |
 | taskName | String | 任务名称 |
 | jobParams | String | 控制台配置的静态参数 |
-| instanceParams | String | 运行时参数 |
-| subTask | Object | 子任务对象（Map/MapReduce） |
+| instanceParams | String | 运行时参数（API 或工作流传入） |
+| subTask | Object | 子任务对象（Map/MapReduce 模式） |
 | maxRetryTimes | int | 最大重试次数 |
 | currentRetryTimes | int | 当前重试次数 |
 | omsLogger | OmsLogger | 在线日志记录器 |
 | workflowContext | WorkflowContext | 工作流上下文 |
+| userContext | Object | 用户自定义上下文 |
+| instanceMeta | InstanceMeta | 调度元信息 |
 ### 常用方法
 ```java
 // 获取参数

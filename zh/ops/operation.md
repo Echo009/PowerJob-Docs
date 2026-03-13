@@ -183,8 +183,8 @@ public class LogDemoProcessor implements BasicProcessor {
 SaveJobInfoRequest request = new SaveJobInfoRequest();
 
 LogConfig logConfig = new LogConfig();
-logConfig.setType(LogConfig.LOG_TYPE_ONLINE);
-logConfig.setLevel(LogConfig.LOG_LEVEL_INFO);
+logConfig.setType(LogType.ONLINE.getV());
+logConfig.setLevel(LogLevel.INFO.getV());
 
 request.setLogConfig(logConfig);
 ```

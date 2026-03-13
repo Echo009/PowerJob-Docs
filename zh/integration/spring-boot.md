@@ -97,8 +97,19 @@ public class MethodProcessorDemo {
     public Integer calculate(TaskContext context) {
         return 42;
     }
+
+    @PowerJobHandler(name = "voidHandler")
+    public void voidHandler(TaskContext context) {
+        // 无返回值方法，正常返回代表成功，抛出异常代表执行失败
+        context.getOmsLogger().info("执行完成");
+    }
 }
 ```
+**方法说明：**
+- 方法参数必须为 `TaskContext`
+- 返回值可以是 `void`、`String` 或其他任意类型
+- 正常返回代表成功，抛出异常代表执行失败
+
 **控制台配置处理器信息:**
 ```
 # 全限定类名#方法名
@@ -147,6 +158,7 @@ public class TaskContextDemo implements BasicProcessor {
 |-----|------|------|
 | jobId | Long | 任务 ID |
 | instanceId | Long | 任务实例 ID |
+| subInstanceId | Long | 子任务实例 ID |
 | taskId | String | 任务 ID（字符串） |
 | taskName | String | 任务名称 |
 | jobParams | String | 控制台配置的静态参数 |
@@ -156,6 +168,8 @@ public class TaskContextDemo implements BasicProcessor {
 | currentRetryTimes | int | 当前重试次数 |
 | omsLogger | OmsLogger | 在线日志记录器 |
 | workflowContext | WorkflowContext | 工作流上下文 |
+| userContext | Object | 用户自定义上下文 |
+| instanceMeta | InstanceMeta | 调度元信息 |
 ## 多环境配置
 ```yaml
 # 开发环境

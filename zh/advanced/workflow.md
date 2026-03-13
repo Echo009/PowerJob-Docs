@@ -83,7 +83,7 @@ client.runWorkflow(workflowId, "{\"initParam\":\"value\"}", 0);
 
 ## 决策节点
 
-决策节点通过 JavaScript/Groovy 脚本进行条件判断，根据返回值（`true`/`false`）决定后续执行路径。
+决策节点通过 Groovy 脚本进行条件判断，根据返回值（`true`/`false`）决定后续执行路径。
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd', 'primaryTextColor':'#1565c0', 'primaryBorderColor':'#1976d2', 'lineColor':'#42a5f5', 'secondaryColor':'#e8f5e9', 'tertiaryColor':'#fff3e0', 'background':'#ffffff'}}}%%
@@ -100,13 +100,12 @@ graph LR
 
 **脚本示例：**
 
-```javascript
-// 获取工作流上下文
-var context = workflowContext.fetchWorkflowContext();
-var status = context.get("status");
+```groovy
+// context 为内置变量，即工作流上下文（Map<String, String> 类型）
+def status = context.get("status");
 
 // 返回 true 或 false
-status === "success";
+status == "success";
 ```
 
 ## 嵌套工作流

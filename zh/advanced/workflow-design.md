@@ -113,8 +113,7 @@ graph TB
 **脚本示例**：
 
 ```groovy
-// 获取工作流上下文
-def context = wfContext
+// context 为内置变量，即工作流上下文（Map<String, String> 类型）
 
 // 示例1：简单条件判断
 context.get("status") == "success"
@@ -124,7 +123,7 @@ Integer.parseInt(context.get("count")) > 100
 
 // 示例3：复杂条件
 def status = context.get("status")
-def count = Integer.parseInt(context.get("count", "0"))
+def count = Integer.parseInt(context.get("count"))
 status == "success" && count > 0
 
 // 示例4：使用前置节点结果
@@ -133,8 +132,8 @@ result != null && result.contains("SUCCESS")
 ```
 
 **注意事项**：
-- 脚本必须返回 Boolean 类型值
-- 可通过 `wfContext` 变量访问工作流上下文
+- 脚本必须返回 Boolean 类型值（也支持返回数值类型，非零为 true）
+- 可通过 `context` 变量访问工作流上下文（Map<String, String> 类型）
 - 支持所有 Groovy 语法
 - 建议添加详细的注释说明判断逻辑
 
@@ -457,12 +456,11 @@ Map<String, String> allData = wfContext.fetchWorkflowContext();
 决策节点可以通过脚本访问上下文：
 
 ```groovy
-// 获取完整上下文
-def context = wfContext
+// context 为内置变量，即工作流上下文（Map<String, String> 类型）
 
 // 获取特定值
 def status = context.get("status")
-def count = context.get("count", "0")  // 带默认值
+def count = context.get("count")
 
 // 复杂判断
 status == "success" && Integer.parseInt(count) > 100
@@ -582,9 +580,9 @@ public class DebugLoggerProcessor implements BasicProcessor {
 
 ```groovy
 // 决策节点脚本
-def context = wfContext
+// context 为内置变量，即工作流上下文（Map<String, String> 类型）
 def status = context.get("status")
-def count = Integer.parseInt(context.get("count", "0"))
+def count = Integer.parseInt(context.get("count"))
 
 // 记录判断过程（通过返回特殊值模拟日志）
 // 实际调试时可在控制台查看脚本执行结果
@@ -697,11 +695,11 @@ graph LR
 
 ```groovy
 // 复杂条件判断示例
-def context = wfContext
+// context 为内置变量，即工作流上下文（Map<String, String> 类型）
 
 // 获取多个参数
 def type = context.get("type")
-def priority = Integer.parseInt(context.get("priority", "0"))
+def priority = Integer.parseInt(context.get("priority"))
 def status = context.get("status")
 
 // 组合条件判断
@@ -972,13 +970,14 @@ public ProcessResult process(TaskContext context) throws Exception {
 ### Q2: 决策节点不生效
 
 **可能原因**：
-- 脚本返回值不是 Boolean 类型
+- 脚本返回值不是 Boolean 类型或数值类型
 - 条件边的 property 设置错误
 - 脚本语法错误
 
 **解决方案**：
 ```groovy
-// 确保脚本返回 Boolean
+// 确保脚本返回 Boolean（或数值，非零为 true）
+// context 为内置变量，即工作流上下文
 def result = context.get("status") == "success"
 return result  // 明确返回
 
